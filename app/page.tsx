@@ -13,6 +13,8 @@ import ColorButton from "./_components/color-button";
 import { Cpu, ServerIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ShareButton from "./_components/share-button";
+import { Suspense } from "react";
+import PhoneCardSkeleton from "./_components/phone-card-skeleton";
 
 
 
@@ -20,8 +22,10 @@ type PhoneWithColors = Tables<"phones"> & {
   phone_colors: Tables<"phone_colors">[];
 }
 
-const PhoneCard = ({ order, phones, selectedPhoneName, selectedColor }: { order: "primary" | "secondary", phones: PhoneWithColors[], selectedPhoneName: string, selectedColor: string }) => {
+// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const PhoneCard = async ({ order, phones, selectedPhoneName, selectedColor }: { order: "primary" | "secondary", phones: PhoneWithColors[], selectedPhoneName: string, selectedColor: string }) => {
+  // await sleep(2000);
   const options = phones.map((phone) => ({
     value: phone.name,
     label: `${phone.name} Phone`,
@@ -37,7 +41,7 @@ const PhoneCard = ({ order, phones, selectedPhoneName, selectedColor }: { order:
     <div className="flex flex-col items-center">
       <PhoneCombobox className="mb-4" order={order} options={options} seletedValue={selectedPhoneName} />
       <div className="relative aspect-[6/10] md:aspect-square w-full mb-4">
-        <Image src={`/phones/${selectedPhone.name}-${selectedColor}.png`} alt="i14 beige" fill={true} sizes={"50vw"} style={{ objectFit: "contain" }} />
+        <Image src={`/phones/${selectedPhone.name}-${selectedColor}.png`} alt="i14 beige" fill={true} sizes={"(max-width: 768px) 50vw, 33vw"} style={{ objectFit: "contain" }} priority={true}/>
       </div>
       <div className="flex gap-3 mb-2">
         {selectedPhone.phone_colors.map((color, index) => (
@@ -73,8 +77,12 @@ async function Page({searchParams} : Props) {
   return(
     <div className="container flex flex-col md:items-center md:w-[720px]">
       <div className="grid grid-cols-2 w-full gap-4 md:gap-24 mt-4 mb-4">
-       <PhoneCard order="primary" phones={data} selectedPhoneName={primaryPhone.name} selectedColor={primary_color} />
-       <PhoneCard order="secondary" phones={data} selectedPhoneName={secondaryPhone.name} selectedColor={secondary_color} />
+        <Suspense fallback={<PhoneCardSkeleton />}>
+          <PhoneCard order="primary" phones={data} selectedPhoneName={primaryPhone.name} selectedColor={primary_color} />
+        </Suspense>
+        <Suspense fallback={<PhoneCardSkeleton />}>
+          <PhoneCard order="secondary" phones={data} selectedPhoneName={secondaryPhone.name} selectedColor={secondary_color} />
+        </Suspense>
       </div>
       <ShareButton className="self-end mb-6">공유하기</ShareButton>
       <Accordion type="single" collapsible className="w-full md:w-[480px] mb-24">
