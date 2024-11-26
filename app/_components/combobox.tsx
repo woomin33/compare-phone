@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/popover"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export function PhoneCombobox({ className, order, options, seletedValue } : { className?: string, order: "primary" | "secondary", options: {value: string; label: string}[], seletedValue: string }) {
+export function PhoneCombobox({ className, order, options, selectedValue } : { className?: string, order: "primary" | "secondary", options: {value: string; label: string}[], selectedValue: string }) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState(seletedValue);
+  const [value, setValue] = React.useState(selectedValue);
   const searchParams = useSearchParams();
   const router = useRouter();
 
