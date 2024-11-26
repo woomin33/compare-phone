@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 import Image from "next/image";
 import ColorButton from "./_components/color-button";
 import { Cpu, Server } from "lucide-react";
@@ -31,7 +31,7 @@ export async function generateMetadata({
   }>;
 }) {
   const resolvedParams = await searchParams;
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase.from("phones").select("*, phone_colors(*)");
   if (!data) throw new Error("No data");
 
@@ -119,7 +119,7 @@ async function Page({
   }>;
 }) {
   const resolvedParams = await searchParams;
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase.from("phones").select("*, phone_colors(*)");
   if (!data) throw new Error("No data");
 
