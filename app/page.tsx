@@ -86,7 +86,7 @@ const PhoneCard = async ({
           src={`/phones/${selectedPhone.name}-${selectedColor}.png`}
           alt="i14 beige"
           fill={true}
-          sizes={"(max-width: 768px) 50vw, 33vw"}
+          sizes={"(max-width: 768px) 50vw, 40vw"}
           style={{ objectFit: "contain" }}
           priority={true}
         />
