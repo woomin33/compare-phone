@@ -7,7 +7,7 @@ import {
 import { PhoneCombobox } from "./_components/combobox";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { Tables } from "@/database.types";
 import ColorButton from "./_components/color-button";
 import { Cpu, ServerIcon } from "lucide-react";
