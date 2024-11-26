@@ -87,7 +87,7 @@ const PhoneCard = async ({
           alt="i14 beige"
           fill={true}
           sizes={"(max-width: 768px) 50vw, 33vw"}
-          objectFit="contain"
+          style={{ objectFit: "contain" }}
           priority={true}
         />
       </div>

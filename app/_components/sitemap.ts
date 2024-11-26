@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { MetadataRoute } from "next";
 
-const BASE_URL = '';
+const BASE_URL = 'compare-phone.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createClient();
