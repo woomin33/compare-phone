@@ -30,17 +30,17 @@ type PhoneWithColors = Tables<"phones"> & {
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     primary?: string;
     secondary?: string;
     primaryColor?: string;
     secondaryColor?: string;
-  };
-}) {
+  }>;
+}): Promise<Metadata> {
   const supabase = await createClient();
   const { data } = await supabase.from("phones").select("*, phone_colors(*)");
   if (!data) throw new Error("No data");
-  const { primary, secondary, primaryColor, secondaryColor } = await searchParams || {};
+  const { primary, secondary, primaryColor, secondaryColor } = await searchParams;
   const primaryPhone =
     data.find((phone) => phone.name === primary) || data[0];
   const secondaryPhone =
@@ -86,17 +86,17 @@ const PhoneCard = async ({ order, phones, selectedPhoneName, selectedColor }: { 
   )
 }
 
-async function Page({searchParams} : {searchParams: {
+async function Page({searchParams} : {searchParams: Promise<{
   primary?: string;
   secondary?: string;
   primaryColor?: string;
   secondaryColor?: string;
-};}) {
+}>;}) {
   const supabase = await createClient();
   const { data, error } = await supabase.from("phones").select("*, phone_colors(*)");
   if(!data) throw new Error("No data");
   
-  const { primary, secondary, primaryColor, secondaryColor } = await searchParams || {};
+  const { primary, secondary, primaryColor, secondaryColor } = await searchParams;
   const primaryPhone =  data.find((phone) => phone.name === primary) || data[0];
   const secondaryPhone = data.find((phone) => phone.name === secondary) || data[0];
   const primary_color = primaryColor || primaryPhone.phone_colors[0].name;
