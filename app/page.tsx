@@ -23,26 +23,27 @@ type PhoneWithColors = Tables<"phones"> & {
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     primary?: string;
     secondary?: string;
     primaryColor?: string;
     secondaryColor?: string;
-  };
+  }>;
 }) {
+  const resolvedParams = await searchParams;
   const supabase = createClient();
   const { data } = await supabase.from("phones").select("*, phone_colors(*)");
   if (!data) throw new Error("No data");
 
   const primaryPhone =
-    data.find((phone) => phone.name === searchParams.primary) || data[0];
+    data.find((phone) => phone.name === resolvedParams.primary) || data[0];
   const secondaryPhone =
-    data.find((phone) => phone.name === searchParams.secondary) || data[0];
+    data.find((phone) => phone.name === resolvedParams.secondary) || data[0];
 
   const primaryColor =
-    searchParams.primaryColor || primaryPhone.phone_colors[0].name;
+    resolvedParams.primaryColor || primaryPhone.phone_colors[0].name;
   const secondaryColor =
-    searchParams.secondaryColor || secondaryPhone.phone_colors[0].name;
+    resolvedParams.secondaryColor || secondaryPhone.phone_colors[0].name;
 
   return {
     title: `${primaryPhone.name} ${primaryColor}모델과 ${secondaryPhone.name} ${secondaryColor} 모델을 비교해 보세요.`,
@@ -110,26 +111,27 @@ const PhoneCard = async ({
 async function Page({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     primary?: string;
     secondary?: string;
     primaryColor?: string;
     secondaryColor?: string;
-  };
+  }>;
 }) {
+  const resolvedParams = await searchParams;
   const supabase = createClient();
   const { data } = await supabase.from("phones").select("*, phone_colors(*)");
   if (!data) throw new Error("No data");
 
   const primaryPhone =
-    data.find((phone) => phone.name === searchParams.primary) || data[0];
+    data.find((phone) => phone.name === resolvedParams.primary) || data[0];
   const secondaryPhone =
-    data.find((phone) => phone.name === searchParams.secondary) || data[0];
+    data.find((phone) => phone.name === resolvedParams.secondary) || data[0];
 
   const primaryColor =
-    searchParams.primaryColor || primaryPhone.phone_colors[0].name;
+    resolvedParams.primaryColor || primaryPhone.phone_colors[0].name;
   const secondaryColor =
-    searchParams.secondaryColor || secondaryPhone.phone_colors[0].name;
+    resolvedParams.secondaryColor || secondaryPhone.phone_colors[0].name;
 
   return (
     <div className="container flex flex-col md:items-center md:w-[720px]">
