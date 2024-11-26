@@ -15,11 +15,44 @@ import { Button } from "@/components/ui/button";
 import ShareButton from "./_components/share-button";
 import { Suspense } from "react";
 import PhoneCardSkeleton from "./_components/phone-card-skeleton";
+import { Metadata } from "next";
 
 
+// export const metadata: Metadata = {
+//   title: "I-Phone 비교하기",
+//   description: "I-Phone을 비교해 보세요.",
+// }
 
 type PhoneWithColors = Tables<"phones"> & {
   phone_colors: Tables<"phone_colors">[];
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: {
+    primary?: string;
+    secondary?: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+  };
+}) {
+  const supabase = await createClient();
+  const { data } = await supabase.from("phones").select("*, phone_colors(*)");
+  if (!data) throw new Error("No data");
+  const { primary, secondary, primaryColor, secondaryColor } = await searchParams;
+  const primaryPhone =
+    data.find((phone) => phone.name === primary) || data[0];
+  const secondaryPhone =
+    data.find((phone) => phone.name === secondary) || data[0];
+  const primary_color =
+    primaryColor || primaryPhone.phone_colors[0].name;
+  const secondary_color =
+    secondaryColor || secondaryPhone.phone_colors[0].name;
+  return {
+    title: `${primaryPhone.name} ${primary_color}모델과 ${secondaryPhone.name} ${secondary_color} 모델을 비교해 보세요.`,
+    description: `${primaryPhone.name}와 ${secondaryPhone.name}의 스마트폰 정보를 비교해 보세요.`,
+  };
 }
 
 // const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
