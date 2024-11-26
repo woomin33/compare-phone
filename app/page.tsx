@@ -40,7 +40,7 @@ export async function generateMetadata({
   const supabase = await createClient();
   const { data } = await supabase.from("phones").select("*, phone_colors(*)");
   if (!data) throw new Error("No data");
-  const { primary, secondary, primaryColor, secondaryColor } = await searchParams;
+  const { primary, secondary, primaryColor, secondaryColor } = await searchParams || {};
   const primaryPhone =
     data.find((phone) => phone.name === primary) || data[0];
   const secondaryPhone =
@@ -96,7 +96,7 @@ async function Page({searchParams} : {searchParams: {
   const { data, error } = await supabase.from("phones").select("*, phone_colors(*)");
   if(!data) throw new Error("No data");
   
-  const { primary, secondary, primaryColor, secondaryColor } = await searchParams;
+  const { primary, secondary, primaryColor, secondaryColor } = await searchParams || {};
   const primaryPhone =  data.find((phone) => phone.name === primary) || data[0];
   const secondaryPhone = data.find((phone) => phone.name === secondary) || data[0];
   const primary_color = primaryColor || primaryPhone.phone_colors[0].name;
