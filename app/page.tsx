@@ -85,18 +85,13 @@ const PhoneCard = async ({ order, phones, selectedPhoneName, selectedColor }: { 
     </div>
   )
 }
-interface searchParams {
+
+async function Page({searchParams} : {searchParams: {
   primary?: string;
   secondary?: string;
   primaryColor?: string;
   secondaryColor?: string;
-}
-
-interface Props {
-  searchParams: searchParams
-
-}
-async function Page({searchParams} : Props) {
+};}) {
   const supabase = await createClient();
   const { data, error } = await supabase.from("phones").select("*, phone_colors(*)");
   if(!data) throw new Error("No data");
